@@ -42,8 +42,8 @@ public class CompraAcciones {
             gbc.insets = new Insets(2, 2, 2, 2);
 
 
-            agregarAcciones("apple", "5", gbc);
-            agregarAcciones("apple", "5", gbc);
+            agregarAcciones("2","apple", "5", gbc);
+            agregarAcciones("2","apple", "5", gbc);
 
             gbc.ipady = 50;
             
@@ -106,11 +106,14 @@ public class CompraAcciones {
 
         }
 
-        public void agregarAcciones(String nombre, String valor, GridBagConstraints gbc){
+        public void agregarAcciones(String cantidad, String nombre, String valor, GridBagConstraints gbc){
             
+            add(new JLabel(cantidad), gbc);
+            gbc.gridx++;
             add(new JLabel(nombre), gbc);
             gbc.gridx++;
             add(new JLabel(valor), gbc);
+            
 
             gbc.gridx = 0;
             gbc.gridy++;
