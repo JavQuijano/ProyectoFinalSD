@@ -27,6 +27,7 @@ public class ProvinceClient {
     private CompraAcciones compraAcciones;
     private String host;
     private int port;
+    public String rfcCliente;
 
     public ProvinceClient() throws IOException {
         host = "127.0.0.1";
@@ -53,6 +54,7 @@ public class ProvinceClient {
         String result = in.readLine();
         System.out.println(result);
         if (result.equals("true")) {
+            rfcCliente = user;
             vistaLogin.dispose();
             vistaPanel.run();
         } else {
@@ -83,15 +85,15 @@ public class ProvinceClient {
         vistaPanel.run();
     }
 
-    public ArrayList obtenerAccionesVenta() throws IOException {
+    public ArrayList<String[]> obtenerAccionesVenta() throws IOException {
         socket = new Socket(this.host, this.port);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String parameter = "1";
+        String parameter = "1:" + this.rfcCliente;
         out.println(parameter);
         String result = in.readLine();
         System.out.println(result);
-        ArrayList<String[]> acciones = new ArrayList<String[]>();
+        ArrayList<String[]> acciones = new ArrayList<>();
         String[] stringRow = result.split(";",50);
         for(String stringCol : stringRow){
             acciones.add(stringCol.split(",",5));

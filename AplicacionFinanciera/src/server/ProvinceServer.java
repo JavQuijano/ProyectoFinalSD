@@ -73,7 +73,7 @@ public class ProvinceServer {
                         result = verificarUsuario(infoArray[1]);
                         break;
                     case "1":
-                        result = obtenerVentasUsuario();
+                        result = obtenerVentasUsuario(infoArray[1]);
                         break;
                     case "2":
                         result = obtenerComprasUsuario();
@@ -114,6 +114,25 @@ public class ProvinceServer {
                 result = "false";
             }
             return result;
+        }
+
+        private String obtenerVentasUsuario(String rfcCliente) throws ClassNotFoundException, SQLException {
+            DBManager db = new DBManager();
+            String result = "";
+            ResultSet rs = db.select("Select SUM(Acciones) as numeroAcciones, RFC, ValorAcc from transacciones JOIN companias ON RFCCompania = RFC WHERE RFCUsuario = '" + rfcCliente + "' AND Acciones > 0 GROUP BY RFCCompania");
+            if (rs.next()) {
+                do {
+                    result += rs.getString("RFC") + "," + String.valueOf(rs.getInt("numeroAcciones")) + "," + String.valueOf(rs.getBigDecimal("ValorAcc") + ";");
+                } while (rs.next());
+            } else {
+                result = "false";
+            }
+            result = result.substring(0, result.length() - 1);
+            return result;
+        }
+
+        private String obtenerComprasUsuario() {
+            return "vamos baby";
         }
     }
 }

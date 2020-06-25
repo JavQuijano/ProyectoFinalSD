@@ -13,8 +13,8 @@ public final class DBManager {
     private Connection _con = null;
     private String server = "localhost";
     private int port = 3306;
-    private String user = "sd";
-    private String password = "sd";    
+    private String user = "root";
+    private String password = "root";    
     private static Connection cn  = null;
     private String url = "";
     private String base= "sistemasdistribuidos";
@@ -23,7 +23,7 @@ public final class DBManager {
     public DBManager() throws ClassNotFoundException {
         
         //_con = getMySQLConnection();
-        this.url="jdbc:mysql://"+ this.server+ ":"+this.port+"/"+this.base;
+        this.url="jdbc:mysql://"+ this.server+ ":"+this.port+"/"+this.base + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
         try {
             cn = DriverManager.getConnection(this.url,this.user,this.password);
         } catch (SQLException e) {
