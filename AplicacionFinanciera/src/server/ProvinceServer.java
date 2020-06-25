@@ -73,10 +73,10 @@ public class ProvinceServer {
                         result = verificarUsuario(infoArray[1]);
                         break;
                     case "1":
-                        result = obtenerVentasUsuario();
+                        result = "hopl";
                         break;
                     case "2":
-                        result = obtenerComprasUsuario();
+                        result = "asd";
                         break;
                 }
                 out.println(result);
