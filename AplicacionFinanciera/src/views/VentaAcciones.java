@@ -1,59 +1,65 @@
+package views;
+
+import cliente.ProvinceClient;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.*;
-
-
 
 public class VentaAcciones {
 
-    public static void main(String[] args) {
+    private ProvinceClient provinceClient;
+    private JFrame frame;
 
-       new VentaAcciones();
-  }
-      public VentaAcciones() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                }
-
-                JFrame frame = new JFrame("Testing");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setLayout(new BorderLayout());
-                frame.add(new VentaAccionesPane());
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            }
-        });
+    public VentaAcciones(ProvinceClient provinceClient) {
+        this.provinceClient = provinceClient;
     }
 
+    public void run() throws IOException {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        }
+
+        this.frame = new JFrame("Testing");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        frame.add(new VentaAccionesPane(provinceClient));
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    public void dispose() {
+        this.frame.dispose();
+    }
 
     public class VentaAccionesPane extends JPanel {
 
-        public VentaAccionesPane() {
+        public VentaAccionesPane(ProvinceClient provinceClient) throws IOException {
             setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.insets = new Insets(2, 2, 2, 2);
-            
+
             add(new JLabel("Nombre Accion"), gbc);
             gbc.gridx++;
-            
+
             add(new JLabel("Precio Accion"), gbc);
             gbc.gridx++;
-            
+
             gbc.gridx = 0;
             gbc.gridy++;
-            agregarAcciones("apple", "5", gbc);
-            agregarAcciones("apple", "5", gbc);
+            ArrayList<String[]> accionesVenta = provinceClient.obtenerAccionesVenta();
+            for (String[] accion : accionesVenta) {
+                agregarAcciones(accion[0], accion[1], accion[2], gbc);
+            }
 
             gbc.ipady = 50;
-            
+
             gbc.gridx = 1;
             add(new JLabel("Comprar Acciones"), gbc);
             gbc.gridx = 0;
@@ -76,7 +82,7 @@ public class VentaAcciones {
             gbc.gridx++;
             add(new JTextField(10), gbc);
             gbc.gridx++;
-            add(new JTextField(10), gbc); 
+            add(new JTextField(10), gbc);
 
             gbc.gridx = 0;
             gbc.gridy++;
@@ -90,34 +96,29 @@ public class VentaAcciones {
             JButton button_regresar = new JButton("Regresar al panel");
             add(button_regresar, gbc);
 
-
-
             button_VentaAcciones.addActionListener(new ActionListener() {
-
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Comprar");
                 }
             });
-            
+
             button_regresar.addActionListener(new ActionListener() {
 
-
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Regresar");
+                    provinceClient.desplegarPanel(1);
                 }
             });
-            
- 
 
         }
 
-        public void agregarAcciones(String nombre, String valor, GridBagConstraints gbc){
-            
+        public void agregarAcciones(String nombre, String precio, String cantidad, GridBagConstraints gbc) {
+
             add(new JLabel(nombre), gbc);
             gbc.gridx++;
-            add(new JLabel(valor), gbc);
-
+            add(new JLabel(cantidad), gbc);
+            gbc.gridx++;
+            add(new JLabel(precio), gbc);
             gbc.gridx = 0;
             gbc.gridy++;
 

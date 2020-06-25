@@ -1,7 +1,7 @@
-package province;
+
+package server;
 
 import java.sql.*;
- 
 /**
  * DBManager: Singleton pattern
  *
@@ -9,24 +9,26 @@ import java.sql.*;
  **/
 public final class DBManager {
  
-  private static DBManager _instance = null;
-  private Connection _con = null;
- private String server = "localhost";
-    private int port = 8889;
-	private String user = "root";
-    private String password = "root";    
+    private static DBManager _instance = null;
+    private Connection _con = null;
+    private String server = "localhost";
+    private int port = 3306;
+    private String user = "sd";
+    private String password = "sd";    
     private static Connection cn  = null;
     private String url = "";
-    private String base= "SistemasDistribuidos";
+    private String base= "sistemasdistribuidos";
 
 
-    public DBManager() {
-        _con = getMySQLConnection();
+    public DBManager() throws ClassNotFoundException {
+        
+        //_con = getMySQLConnection();
         this.url="jdbc:mysql://"+ this.server+ ":"+this.port+"/"+this.base;
         try {
             cn = DriverManager.getConnection(this.url,this.user,this.password);
         } catch (SQLException e) {
             System.err.println("ERROR AL CONECTAR CON EL SERVIDOR");
+            System.out.println(e);
             System.exit(0); //para la ejecución
         }
         System.out.println("Conectado a "+ this.base);
@@ -74,7 +76,7 @@ public final class DBManager {
   
  
   //Thread safe instatiate method
-  public static synchronized DBManager getInstance() {
+  public static synchronized DBManager getInstance() throws ClassNotFoundException {
     if (_instance == null) {
       _instance = new DBManager();
     }
@@ -93,7 +95,7 @@ public final class DBManager {
  
     try {
  
-      String strCon = "jdbc:mysql://127.0.0.1/test?user=rtuser&password=123";
+      String strCon = "jdbc:mysql://localhost:3306/sistemasdistribuidos?user=root&password=root";
       con = DriverManager.getConnection(strCon);
     } catch (SQLException se) {
       System.out.println(se);

@@ -1,4 +1,6 @@
-import server.DBManager;
+package server;
+
+import cliente.Province;
 import java.sql.*;
 import java.util.*;
  
@@ -8,7 +10,7 @@ import java.util.*;
  */
 public class ProvinceRepository {
  
-  public static int save(Province p) {
+  public static int save(Province p) throws ClassNotFoundException {
     int iRet = -1;
     try {
       Connection con = DBManager.getInstance().getConnection();
@@ -29,7 +31,7 @@ public class ProvinceRepository {
     return iRet;
   }
  
-  public static int update(Province p) {
+  public static int update(Province p) throws ClassNotFoundException {
     int iRet = -1;
     try {
       Connection con = DBManager.getInstance().getConnection();
@@ -49,7 +51,7 @@ public class ProvinceRepository {
     return iRet;
   }
  
-  public static int delete(Province p) {
+  public static int delete(Province p) throws ClassNotFoundException {
     int iRet = -1;
     try {
       Connection con = DBManager.getInstance().getConnection();
@@ -66,7 +68,7 @@ public class ProvinceRepository {
     return iRet;
   }
  
-  public static void deleteAll() {
+  public static void deleteAll() throws ClassNotFoundException {
     Connection con = DBManager.getInstance().getConnection();
     try {
       con.setAutoCommit(false);
@@ -88,7 +90,7 @@ public class ProvinceRepository {
     }
   }
  
-  public static ArrayList findAll() {
+  public static ArrayList findAll() throws ClassNotFoundException {
     ArrayList arr = new ArrayList();
  
     try {
@@ -112,7 +114,7 @@ public class ProvinceRepository {
     return arr;
   }
  
-  public static ArrayList findByName(String name) {
+  public static ArrayList findByName(String name) throws ClassNotFoundException {
     ArrayList arr = new ArrayList();
  
     try {

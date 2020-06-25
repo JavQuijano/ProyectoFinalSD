@@ -1,52 +1,53 @@
+package views;
+
+import cliente.ProvinceClient;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-
-
 public class CompraAcciones {
-
-    public static void main(String[] args) {
-
-       new CompraAcciones();
-  }
-      public CompraAcciones() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                }
-
-                JFrame frame = new JFrame("Testing");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setLayout(new BorderLayout());
-                frame.add(new CompraAccionesPane());
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            }
-        });
+    
+    private ProvinceClient provinceClient;
+    private JFrame frame;
+    
+    public CompraAcciones(ProvinceClient provinceClient) {
+        this.provinceClient = provinceClient;
     }
 
+    public void run() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        }
+
+        this.frame = new JFrame("Testing");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        frame.add(new CompraAccionesPane(provinceClient));
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+    
+    public void dispose() {
+        this.frame.dispose();
+    }
 
     public class CompraAccionesPane extends JPanel {
 
-        public CompraAccionesPane() {
+        public CompraAccionesPane(ProvinceClient provinceClient) {
             setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.insets = new Insets(2, 2, 2, 2);
 
-
             agregarAcciones("apple", "5", gbc);
             agregarAcciones("apple", "5", gbc);
 
             gbc.ipady = 50;
-            
+
             gbc.gridx = 1;
             add(new JLabel("Comprar Acciones"), gbc);
             gbc.gridx = 0;
@@ -70,7 +71,7 @@ public class CompraAcciones {
             gbc.gridx++;
             add(new JTextField(10), gbc);
             gbc.gridx++;
-            add(new JTextField(10), gbc); 
+            add(new JTextField(10), gbc);
 
             gbc.gridx = 0;
             gbc.gridy++;
@@ -84,30 +85,24 @@ public class CompraAcciones {
             JButton button_regresar = new JButton("Regresar al panel");
             add(button_regresar, gbc);
 
-
-
             button_CompraAcciones.addActionListener(new ActionListener() {
-
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Comprar");
                 }
             });
-            
+
             button_regresar.addActionListener(new ActionListener() {
 
-
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Regresar");
+                    provinceClient.desplegarPanel(2);
                 }
             });
-            
- 
 
         }
 
-        public void agregarAcciones(String nombre, String valor, GridBagConstraints gbc){
-            
+        public void agregarAcciones(String nombre, String valor, GridBagConstraints gbc) {
+
             add(new JLabel(nombre), gbc);
             gbc.gridx++;
             add(new JLabel(valor), gbc);
