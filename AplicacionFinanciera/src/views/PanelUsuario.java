@@ -4,6 +4,9 @@ import cliente.ProvinceClient;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class PanelUsuario {
@@ -63,7 +66,11 @@ public class PanelUsuario {
 
             button_vender.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    provinceClient.desplegarVender();
+                    try {
+                        provinceClient.desplegarVender();
+                    } catch (IOException ex) {
+                        Logger.getLogger(PanelUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             });
             button_comprar.addActionListener(new ActionListener() {

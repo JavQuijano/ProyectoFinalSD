@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 
 public class VentaAcciones {
@@ -47,16 +48,20 @@ public class VentaAcciones {
 
             add(new JLabel("Nombre Accion"), gbc);
             gbc.gridx++;
-
+            
+            add(new JLabel("Cantidad"), gbc);
+            gbc.gridx++;
+            
             add(new JLabel("Precio Accion"), gbc);
             gbc.gridx++;
 
             gbc.gridx = 0;
             gbc.gridy++;
+            System.out.println(provinceClient.rfcCliente); 
             ArrayList<String[]> accionesVenta = provinceClient.obtenerAccionesVenta();
-            for (String[] accion : accionesVenta) {
+            accionesVenta.forEach(accion -> {
                 agregarAcciones(accion[0], accion[1], accion[2], gbc);
-            }
+            });
 
             gbc.ipady = 50;
 

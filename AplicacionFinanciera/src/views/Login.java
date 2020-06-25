@@ -52,7 +52,7 @@ public class Login {
             gbc.gridx = 0;
             gbc.gridy++;
             gbc.fill = GridBagConstraints.HORIZONTAL;
-            JTextField usernameField = new JTextField(10);
+            JTextField usernameField = new JTextField("CMMR080397");
             add(usernameField, gbc);
 
             gbc.gridx = 0;
