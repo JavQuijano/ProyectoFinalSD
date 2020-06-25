@@ -1,13 +1,17 @@
 package province;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-public class DBManager {
-    private String server = "localhost";
+import java.sql.*;
+ 
+/**
+ * DBManager: Singleton pattern
+ *
+ *
+ **/
+public final class DBManager {
+ 
+  private static DBManager _instance = null;
+  private Connection _con = null;
+ private String server = "localhost";
     private int port = 8889;
 	private String user = "root";
     private String password = "root";    
@@ -17,6 +21,7 @@ public class DBManager {
 
 
     public DBManager() {
+        _con = getMySQLConnection();
         this.url="jdbc:mysql://"+ this.server+ ":"+this.port+"/"+this.base;
         try {
             cn = DriverManager.getConnection(this.url,this.user,this.password);
@@ -66,5 +71,34 @@ public class DBManager {
             return null;
         }
     }
-
+  
+ 
+  //Thread safe instatiate method
+  public static synchronized DBManager getInstance() {
+    if (_instance == null) {
+      _instance = new DBManager();
+    }
+    return _instance;
+  }
+ 
+  public Connection getConnection() {
+    return _con;
+  }
+ 
+  /**
+   * Connection to MySQL Database
+   */
+  private static Connection getMySQLConnection() {
+    Connection con = null;
+ 
+    try {
+ 
+      String strCon = "jdbc:mysql://127.0.0.1/test?user=rtuser&password=123";
+      con = DriverManager.getConnection(strCon);
+    } catch (SQLException se) {
+      System.out.println(se);
+    }
+    return con;
+  }
+  
 }
