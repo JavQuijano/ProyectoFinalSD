@@ -1,20 +1,18 @@
 package server;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+import java.util.ArrayList;
 import server.DBManager;
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Timer;
 
 /**
  * Server
@@ -22,17 +20,30 @@ import java.util.logging.Logger;
  */
 public class ProvinceServer {
 
-    public static void main(String[] args) {
+    private ArrayList<ClientHandler> handlerConectedUsers = new ArrayList<ClientHandler>();
+    private ArrayList<String> RFCConectedUsers = new ArrayList<String>();
+    private static ArrayList<String[]> CompaniasDisponibles = new ArrayList<String[]>();
+    private ArrayList<TransaccionCompra> timersCompra = new ArrayList<TransaccionCompra>();
+    private ArrayList<TransaccionVenta> timersVenta = new ArrayList<TransaccionVenta>();
+
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        ProvinceServer provinceServer = new ProvinceServer();
+    }
+
+    public ProvinceServer() throws ClassNotFoundException, SQLException {
+
+        CompaniasDisponibles = obtenerCompanias();
         ServerSocket server = null;
         try {
+
             server = new ServerSocket(32000);
             server.setReuseAddress(true);
             // The main thread is just accepting new connections
             while (true) {
                 Socket client = server.accept();
                 System.out.println("New client connected " + client.getInetAddress().getHostAddress());
-                ClientHandler clientSock = new ClientHandler(client);
-
+                ClientHandler clientSock = new ClientHandler(client, this, timersCompra, timersVenta);
+                handlerConectedUsers.add(clientSock);
                 // The background thread will handle each client separately
                 new Thread(clientSock).start();
             }
@@ -49,101 +60,24 @@ public class ProvinceServer {
         }
     }
 
-    private static class ClientHandler implements Runnable {
-
-        private final Socket clientSocket;
-
-        public ClientHandler(Socket socket) {
-            this.clientSocket = socket;
+    public static ArrayList<String[]> obtenerCompanias() throws ClassNotFoundException, SQLException {
+        DBManager db = new DBManager();
+        ArrayList<String[]> result = new ArrayList<String[]>();
+        ResultSet rs = db.select("Select * from companias");
+        if (rs.next()) {
+            do {
+                String[] temp = new String[4];
+                temp[0] = rs.getString("RFC");
+                temp[1] = rs.getString("TotalAcc");
+                temp[2] = rs.getString("AccDisponibles");
+                temp[3] = rs.getString("ValorAcc");
+                result.add(temp);
+            } while (rs.next());
         }
+        return result;
+    }
 
-        @Override
-        public void run() {
-            PrintWriter out = null;
-            BufferedReader in = null;
-            String[] userPass;
-            try {
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                String result = "hola";
-                String info = in.readLine();
-                String[] infoArray = info.split(":", 2);
-                switch (infoArray[0]) {
-                    case "0":
-                        result = verificarUsuario(infoArray[1]);
-                        break;
-                    case "1":
-                        result = obtenerVentasUsuario(infoArray[1]);
-                        break;
-                    case "2":
-                        result = obtenerComprasUsuario(infoArray[1]);
-                        break;
-                }
-                out.println(result);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (SQLException ex) {
-                Logger.getLogger(ProvinceServer.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProvinceServer.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-                    if (in != null) {
-                        in.close();
-                    }
-                    clientSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public static String verificarUsuario(String usuario) throws SQLException, ClassNotFoundException {
-            DBManager db = new DBManager();
-            String result = "false";
-            ResultSet rs = db.select("Select * from usuarios WHERE RFCUsuario = '" + usuario + "'");
-            if (rs.next()) {
-                do {
-                    result = "true";
-                } while (rs.next());
-            } else {
-                result = "false";
-            }
-            return result;
-        }
-
-        private String obtenerVentasUsuario(String rfcCliente) throws ClassNotFoundException, SQLException {
-            DBManager db = new DBManager();
-            String result = "";
-            ResultSet rs = db.select("Select SUM(Acciones) as numeroAcciones, RFC, ValorAcc from transacciones JOIN companias ON RFCCompania = RFC WHERE RFCUsuario = '" + rfcCliente + "' AND Acciones > 0 GROUP BY RFCCompania");
-            if (rs.next()) {
-                do {
-                    result += rs.getString("RFC") + "," + String.valueOf(rs.getInt("numeroAcciones")) + "," + String.valueOf(rs.getBigDecimal("ValorAcc") + ";");
-                } while (rs.next());
-            } else {
-                result = "false";
-            }
-            result = result.substring(0, result.length() - 1);
-            return result;
-        }
-
-        private String obtenerComprasUsuario(String rfcCliente) throws ClassNotFoundException, SQLException {
-            DBManager db = new DBManager();
-            String result = "";
-            ResultSet rs = db.select("Select * from companias WHERE AccDisponibles > 0");
-            if (rs.next()) {
-                do {
-                    result += rs.getString("RFC") + "," + String.valueOf(rs.getInt("AccDisponibles")) + "," + String.valueOf(rs.getBigDecimal("ValorAcc") + ";");
-                } while (rs.next());
-            } else {
-                result = "false";
-            }
-            result = result.substring(0, result.length() - 1);
-            return result;
-        }
+    void terminarTimerCompra(TransaccionCompra timer) {
+        timersCompra.remove(timer);
     }
 }

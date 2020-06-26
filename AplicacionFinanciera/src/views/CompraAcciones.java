@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class CompraAcciones {
@@ -110,7 +112,11 @@ public class CompraAcciones {
                     String RFCCompania = fieldNombre.getText();
                     String cantidadCompra = fieldCantidad.getText();
                     String valorCompra = fieldValor.getText();
-                    provinceClient.ofertarCompraAccion(RFCCompania, cantidadCompra, valorCompra);
+                    try {
+                        provinceClient.ofertarCompraAccion(RFCCompania, cantidadCompra, valorCompra);
+                    } catch (IOException ex) {
+                        Logger.getLogger(CompraAcciones.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             });
 

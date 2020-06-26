@@ -119,8 +119,21 @@ public class ProvinceClient {
         return acciones;
     }
 
-    public void ofertarCompraAccion(String RFCCompania, String cantidadCompra, String valorCompra) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void ofertarCompraAccion(String RFCCompania, String cantidadCompra, String valorCompra) throws IOException {
+        socket = new Socket(this.host, this.port);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String parameter = "3:" + this.rfcCliente + ":" + RFCCompania + ":" + cantidadCompra + ":" + valorCompra;
+        System.out.println(parameter);
+        out.println(parameter);
+        String result = in.readLine();
+        System.out.println(result);
+        if(result.equals("true")){
+            System.out.println("comprada");
+        }else{
+            System.out.println("no comprada");
+        }
+        socket.close();
     }
 
     public void ofertarVentaAccion(String RFCCompania, String cantidadVenta, String valorVenta) {
