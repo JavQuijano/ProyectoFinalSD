@@ -76,7 +76,7 @@ public class ProvinceServer {
                         result = obtenerVentasUsuario(infoArray[1]);
                         break;
                     case "2":
-                        result = "asd";
+                        result = obtenerComprasUsuario(infoArray[1]);
                         break;
                 }
                 out.println(result);
@@ -131,8 +131,19 @@ public class ProvinceServer {
             return result;
         }
 
-        private String obtenerComprasUsuario() {
-            return "vamos baby";
+        private String obtenerComprasUsuario(String rfcCliente) throws ClassNotFoundException, SQLException {
+            DBManager db = new DBManager();
+            String result = "";
+            ResultSet rs = db.select("Select * from companias WHERE AccDisponibles > 0");
+            if (rs.next()) {
+                do {
+                    result += rs.getString("RFC") + "," + String.valueOf(rs.getInt("AccDisponibles")) + "," + String.valueOf(rs.getBigDecimal("ValorAcc") + ";");
+                } while (rs.next());
+            } else {
+                result = "false";
+            }
+            result = result.substring(0, result.length() - 1);
+            return result;
         }
     }
 }

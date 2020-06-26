@@ -68,7 +68,7 @@ public class ProvinceClient {
         vistaPanel.dispose();
     }
 
-    public void desplegarComprar() {
+    public void desplegarComprar() throws IOException {
         compraAcciones.run();
         vistaPanel.dispose();
     }
@@ -101,4 +101,30 @@ public class ProvinceClient {
         socket.close();
         return acciones;
     }
+
+    public ArrayList<String[]> obtenerAccionesCompra() throws IOException {
+        socket = new Socket(this.host, this.port);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String parameter = "2:" + this.rfcCliente;
+        out.println(parameter);
+        String result = in.readLine();
+        System.out.println(result);
+        ArrayList<String[]> acciones = new ArrayList<>();
+        String[] stringRow = result.split(";",50);
+        for(String stringCol : stringRow){
+            acciones.add(stringCol.split(",",5));
+        }
+        socket.close();
+        return acciones;
+    }
+
+    public void ofertarCompraAccion(String RFCCompania, String cantidadCompra, String valorCompra) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void ofertarVentaAccion(String RFCCompania, String cantidadVenta, String valorVenta) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

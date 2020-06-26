@@ -75,7 +75,11 @@ public class PanelUsuario {
             });
             button_comprar.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    provinceClient.desplegarComprar();
+                    try {
+                        provinceClient.desplegarComprar();
+                    } catch (IOException ex) {
+                        Logger.getLogger(PanelUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             });
 

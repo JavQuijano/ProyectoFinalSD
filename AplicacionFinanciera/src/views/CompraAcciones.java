@@ -4,6 +4,8 @@ import cliente.ProvinceClient;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class CompraAcciones {
@@ -15,7 +17,7 @@ public class CompraAcciones {
         this.provinceClient = provinceClient;
     }
 
-    public void run() {
+    public void run() throws IOException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -36,15 +38,29 @@ public class CompraAcciones {
 
     public class CompraAccionesPane extends JPanel {
 
-        public CompraAccionesPane(ProvinceClient provinceClient) {
+        public CompraAccionesPane(ProvinceClient provinceClient) throws IOException {
             setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.insets = new Insets(2, 2, 2, 2);
 
-            agregarAcciones("apple", "5", gbc);
-            agregarAcciones("apple", "5", gbc);
+             add(new JLabel("Nombre Accion"), gbc);
+            gbc.gridx++;
+            
+            add(new JLabel("Precio Accion"), gbc);
+            gbc.gridx++;
+            
+            add(new JLabel("Cantidad"), gbc);
+            gbc.gridx++;
+
+            gbc.gridx = 0;
+            gbc.gridy++;
+            
+            ArrayList<String[]> accionesCompra = provinceClient.obtenerAccionesCompra();
+            accionesCompra.forEach(accion -> {
+                agregarAcciones(accion[0], accion[1], accion[2], gbc);
+            });
 
             gbc.ipady = 50;
 
@@ -67,11 +83,14 @@ public class CompraAcciones {
             gbc.gridy++;
 
             gbc.fill = GridBagConstraints.HORIZONTAL;
-            add(new JTextField(10), gbc);
+            JTextField fieldNombre = new JTextField(10);
+            add(fieldNombre, gbc);
             gbc.gridx++;
-            add(new JTextField(10), gbc);
+            JTextField fieldCantidad = new JTextField(10);
+            add(fieldCantidad, gbc);
             gbc.gridx++;
-            add(new JTextField(10), gbc);
+            JTextField fieldValor = new JTextField(10);
+            add(fieldValor, gbc);
 
             gbc.gridx = 0;
             gbc.gridy++;
@@ -88,7 +107,10 @@ public class CompraAcciones {
             button_CompraAcciones.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Comprar");
+                    String RFCCompania = fieldNombre.getText();
+                    String cantidadCompra = fieldCantidad.getText();
+                    String valorCompra = fieldValor.getText();
+                    provinceClient.ofertarCompraAccion(RFCCompania, cantidadCompra, valorCompra);
                 }
             });
 
@@ -101,11 +123,13 @@ public class CompraAcciones {
 
         }
 
-        public void agregarAcciones(String nombre, String valor, GridBagConstraints gbc) {
+        public void agregarAcciones(String nombre, String valor, String cantidad, GridBagConstraints gbc) {
 
             add(new JLabel(nombre), gbc);
             gbc.gridx++;
             add(new JLabel(valor), gbc);
+            gbc.gridx++;
+            add(new JLabel(cantidad), gbc);
 
             gbc.gridx = 0;
             gbc.gridy++;

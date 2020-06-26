@@ -49,15 +49,15 @@ public class VentaAcciones {
             add(new JLabel("Nombre Accion"), gbc);
             gbc.gridx++;
             
-            add(new JLabel("Cantidad"), gbc);
+            add(new JLabel("Precio Accion"), gbc);
             gbc.gridx++;
             
-            add(new JLabel("Precio Accion"), gbc);
+            add(new JLabel("Cantidad"), gbc);
             gbc.gridx++;
 
             gbc.gridx = 0;
             gbc.gridy++;
-            System.out.println(provinceClient.rfcCliente); 
+            
             ArrayList<String[]> accionesVenta = provinceClient.obtenerAccionesVenta();
             accionesVenta.forEach(accion -> {
                 agregarAcciones(accion[0], accion[1], accion[2], gbc);
@@ -83,11 +83,14 @@ public class VentaAcciones {
             gbc.gridy++;
 
             gbc.fill = GridBagConstraints.HORIZONTAL;
-            add(new JTextField(10), gbc);
+            JTextField fieldNombre = new JTextField(10);
+            add(fieldNombre, gbc);
             gbc.gridx++;
-            add(new JTextField(10), gbc);
+            JTextField fieldCantidad = new JTextField(10);
+            add(fieldCantidad, gbc);
             gbc.gridx++;
-            add(new JTextField(10), gbc);
+            JTextField fieldValor = new JTextField(10);
+            add(fieldValor, gbc);
 
             gbc.gridx = 0;
             gbc.gridy++;
@@ -104,7 +107,10 @@ public class VentaAcciones {
             button_VentaAcciones.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Comprar");
+                    String RFCCompania = fieldNombre.getText();
+                    String cantidadVenta = fieldCantidad.getText();
+                    String valorVenta = fieldValor.getText();
+                    provinceClient.ofertarVentaAccion(RFCCompania, cantidadVenta, valorVenta);
                 }
             });
 
