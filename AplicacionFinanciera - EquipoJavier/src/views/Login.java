@@ -24,12 +24,10 @@ public class Login {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
         }
 
-        this.frame = new JFrame("Login");
+        this.frame = new JFrame("Testing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        LoginPane loginpane = new LoginPane(this.provinceClient);
-        loginpane.setBackground(Color.BLACK);
-        frame.add(loginpane);
+        frame.add(new LoginPane(this.provinceClient));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -46,10 +44,9 @@ public class Login {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.insets = new Insets(10, 10, 10, 10);
-            JLabel titulo = new JLabel("RFC Usuario");
-            titulo.setForeground(Color.white);
-            add(titulo, gbc);
+            gbc.insets = new Insets(2, 2, 2, 2);
+
+            add(new JLabel("Username"), gbc);
             gbc.gridx++;
 
             gbc.gridx = 0;
@@ -62,7 +59,7 @@ public class Login {
             gbc.gridy++;
             gbc.fill = GridBagConstraints.NONE;
             gbc.gridwidth = 2;
-            JButton button_login = new JButton("Iniciar Sesión");
+            JButton button_login = new JButton("Click");
             add(button_login, gbc);
 
             button_login.addActionListener(new ActionListener() {
