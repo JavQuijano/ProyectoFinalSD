@@ -27,7 +27,9 @@ public class Login {
         this.frame = new JFrame("Testing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.add(new LoginPane(this.provinceClient));
+        LoginPane login = new LoginPane(this.provinceClient);
+        login.setBackground(Color.black);
+        frame.add(login);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -44,9 +46,11 @@ public class Login {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.insets = new Insets(2, 2, 2, 2);
-
-            add(new JLabel("Username"), gbc);
+            gbc.insets = new Insets(20, 20, 20, 20);
+            
+            JLabel user = new JLabel("RFC de Usuario");
+            user.setForeground(Color.white);
+            add(user, gbc);
             gbc.gridx++;
 
             gbc.gridx = 0;
@@ -59,7 +63,12 @@ public class Login {
             gbc.gridy++;
             gbc.fill = GridBagConstraints.NONE;
             gbc.gridwidth = 2;
-            JButton button_login = new JButton("Click");
+            JButton button_login = new JButton("Iniciar Sesión");
+            button_login.setFocusPainted(false);
+            button_login.setForeground(Color.WHITE);
+            button_login.setBackground(new Color(102, 0, 153)); // Purple
+            button_login.setContentAreaFilled(false);
+            button_login.setOpaque(true);
             add(button_login, gbc);
 
             button_login.addActionListener(new ActionListener() {

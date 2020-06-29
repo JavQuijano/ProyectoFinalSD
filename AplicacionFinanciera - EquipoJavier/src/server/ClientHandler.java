@@ -156,7 +156,6 @@ public class ClientHandler implements Runnable {
             timersCompra.add(timer);
         }
         //Thread.sleep(120000);
-        provinceServer.terminarTimerCompra(timer);
         
         return "true";
     }
@@ -184,7 +183,6 @@ public class ClientHandler implements Runnable {
             timersVenta.add(timer);
         }
         //Thread.sleep(120000);
-        provinceServer.terminarTimerVenta(timer);
         
         return "true";
     }

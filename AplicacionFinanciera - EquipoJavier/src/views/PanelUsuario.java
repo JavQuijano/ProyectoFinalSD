@@ -27,7 +27,9 @@ public class PanelUsuario {
         this.frame = new JFrame("Testing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.add(new PanelUsuarioPane(this.provinceClient));
+        PanelUsuarioPane userpanel = new PanelUsuarioPane(this.provinceClient);
+        userpanel.setBackground(Color.BLACK);
+        frame.add(userpanel);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -50,7 +52,9 @@ public class PanelUsuario {
             position.weightx = 2;
             position.ipadx = 0;
             position.ipady = 50;
-            add(new JLabel("Bienvenido al Panel del usuario"), position);
+            JLabel mensaje = new JLabel("Bienvenido al Panel del usuario");
+            mensaje.setForeground(Color.white);
+            add(mensaje, position);
 
             position.gridy++;
             position.gridx = 0;
@@ -58,10 +62,20 @@ public class PanelUsuario {
             position.ipady = 0;
 
             JButton button_comprar = new JButton("Comprar");
+            button_comprar.setFocusPainted(false);
+            button_comprar.setForeground(Color.BLACK);
+            button_comprar.setBackground(Color.GREEN); // Purple
+            button_comprar.setContentAreaFilled(false);
+            button_comprar.setOpaque(true);
             add(button_comprar, position);
             position.gridx++;
 
             JButton button_vender = new JButton("Vender");
+            button_vender.setFocusPainted(false);
+            button_vender.setForeground(Color.BLACK);
+            button_vender.setBackground(Color.YELLOW); // Purple
+            button_vender.setContentAreaFilled(false);
+            button_vender.setOpaque(true);
             add(button_vender, position);
 
             button_vender.addActionListener(new ActionListener() {

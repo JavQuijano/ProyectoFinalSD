@@ -37,7 +37,7 @@ public class TransaccionCompra {
             this.RFCCompania = RFCCompania;
             System.out.println("Timer Compania inicio: " + RFCCompania);
             timerCompania = new Timer();
-            timerCompania.schedule(new RemindTask(), 15 * 1000);
+            timerCompania.schedule(new RemindTask(this), 15 * 1000);
         }
     }
 
@@ -50,6 +50,12 @@ public class TransaccionCompra {
     }
 
     class RemindTask extends TimerTask {
+        
+        TransaccionCompra timer;
+        
+        private RemindTask(TransaccionCompra aThis) {
+            timer = aThis;
+        }
 
         public void run() {
             float obj = Collections.max(ofertas);
@@ -57,7 +63,7 @@ public class TransaccionCompra {
             String ganador = clientes.get(index);
 
             System.out.println("Timer Compania termino: " + RFCCompania + " ganador: " + ganador);
-            timerCompania.cancel(); //Terminate the timer thread
+            timerCompania.cancel();
             ClientHandler han = clientesHandler.get(ganador);
             han.Gflag = true;
             try {
@@ -66,6 +72,7 @@ public class TransaccionCompra {
 
                 String fecha = myDateObj.format(myFormatObj);
                 guardar_transaccion(ganador, fecha, cantidades.get(index), ofertas.get(index));
+                server.terminarTimerCompra(timer);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(TransaccionCompra.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
