@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:8889
--- Generation Time: Jun 22, 2020 at 01:29 AM
--- Server version: 5.7.23
--- PHP Version: 7.2.8
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 29-06-2020 a las 03:38:00
+-- Versión del servidor: 10.4.11-MariaDB
+-- Versión de PHP: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -17,18 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `SistemasDistribuidos`
+-- Base de datos: `sistemasdistribuidos`
 --
-CREATE DATABASE IF NOT EXISTS `SistemasDistribuidos` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `SistemasDistribuidos`;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Companias`
+-- Estructura de tabla para la tabla `companias`
 --
 
-CREATE TABLE `Companias` (
+CREATE TABLE `companias` (
   `RFC` varchar(10) NOT NULL,
   `TotalAcc` int(11) NOT NULL,
   `AccDisponibles` int(11) NOT NULL,
@@ -36,10 +35,10 @@ CREATE TABLE `Companias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `Companias`
+-- Volcado de datos para la tabla `companias`
 --
 
-INSERT INTO `Companias` (`RFC`, `TotalAcc`, `AccDisponibles`, `ValorAcc`) VALUES
+INSERT INTO `companias` (`RFC`, `TotalAcc`, `AccDisponibles`, `ValorAcc`) VALUES
 ('A123456789', 500, 25, 1.50),
 ('A1B1C1D1E1', 160, 24, 13.90),
 ('ABCDEFGH12', 250, 12, 45.70),
@@ -49,10 +48,10 @@ INSERT INTO `Companias` (`RFC`, `TotalAcc`, `AccDisponibles`, `ValorAcc`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Province`
+-- Estructura de tabla para la tabla `province`
 --
 
-CREATE TABLE `Province` (
+CREATE TABLE `province` (
   `Id` int(11) NOT NULL,
   `ShortName` text NOT NULL,
   `Name` text NOT NULL
@@ -61,24 +60,33 @@ CREATE TABLE `Province` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Transacciones`
+-- Estructura de tabla para la tabla `transacciones`
 --
 
-CREATE TABLE `Transacciones` (
+CREATE TABLE `transacciones` (
   `RFCUsuario` varchar(10) NOT NULL,
   `RFCCompania` varchar(10) NOT NULL,
-  `FechaHora` datetime DEFAULT CURRENT_TIMESTAMP,
+  `FechaHora` datetime DEFAULT current_timestamp(),
   `Acciones` int(11) NOT NULL,
   `PrecioAccion` float(65,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `transacciones`
+--
+
+INSERT INTO `transacciones` (`RFCUsuario`, `RFCCompania`, `FechaHora`, `Acciones`, `PrecioAccion`) VALUES
+('CMMR080397', 'A1B1C1D1E1', '2020-06-25 18:52:38', 90, 56.00),
+('CMMR080397', 'A1B1C1D1E1', '2020-06-25 18:52:45', 90, 56.50),
+('CMMR080397', 'A123456789', '2020-06-26 01:59:47', 12, 12.00);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Usuarios`
+-- Estructura de tabla para la tabla `usuarios`
 --
 
-CREATE TABLE `Usuarios` (
+CREATE TABLE `usuarios` (
   `RFCUsuario` varchar(10) NOT NULL,
   `RFCCompania` varchar(10) NOT NULL,
   `NumeroAcc` int(11) NOT NULL,
@@ -86,10 +94,10 @@ CREATE TABLE `Usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `Usuarios`
+-- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `Usuarios` (`RFCUsuario`, `RFCCompania`, `NumeroAcc`, `UltPrecCompra`) VALUES
+INSERT INTO `usuarios` (`RFCUsuario`, `RFCCompania`, `NumeroAcc`, `UltPrecCompra`) VALUES
 ('CMMR080397', 'SEIRI12345', 311, 100.00),
 ('JAQS030697', 'ABCDEFGH12', 200, 245.12),
 ('JCMS280696', 'A123456789', 50, 12.40),
@@ -97,51 +105,52 @@ INSERT INTO `Usuarios` (`RFCUsuario`, `RFCCompania`, `NumeroAcc`, `UltPrecCompra
 ('MOBC220697', 'MBYLC4EVER', 1000, 153.98);
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `Companias`
+-- Indices de la tabla `companias`
 --
-ALTER TABLE `Companias`
+ALTER TABLE `companias`
   ADD PRIMARY KEY (`RFC`);
 
 --
--- Indexes for table `Province`
+-- Indices de la tabla `province`
 --
-ALTER TABLE `Province`
+ALTER TABLE `province`
   ADD PRIMARY KEY (`Id`);
 
 --
--- Indexes for table `Transacciones`
+-- Indices de la tabla `transacciones`
 --
-ALTER TABLE `Transacciones`
+ALTER TABLE `transacciones`
   ADD KEY `RFCCompania` (`RFCCompania`),
   ADD KEY `RFCUsuario` (`RFCUsuario`);
 
 --
--- Indexes for table `Usuarios`
+-- Indices de la tabla `usuarios`
 --
-ALTER TABLE `Usuarios`
+ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`RFCUsuario`),
   ADD KEY `RFCCompania` (`RFCCompania`);
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `Transacciones`
+-- Filtros para la tabla `transacciones`
 --
-ALTER TABLE `Transacciones`
-  ADD CONSTRAINT `compa` FOREIGN KEY (`RFCCompania`) REFERENCES `Companias` (`RFC`),
-  ADD CONSTRAINT `user` FOREIGN KEY (`RFCUsuario`) REFERENCES `Usuarios` (`RFCUsuario`);
+ALTER TABLE `transacciones`
+  ADD CONSTRAINT `compa` FOREIGN KEY (`RFCCompania`) REFERENCES `companias` (`RFC`),
+  ADD CONSTRAINT `user` FOREIGN KEY (`RFCUsuario`) REFERENCES `usuarios` (`RFCUsuario`);
 
 --
--- Constraints for table `Usuarios`
+-- Filtros para la tabla `usuarios`
 --
-ALTER TABLE `Usuarios`
-  ADD CONSTRAINT `comp` FOREIGN KEY (`RFCCompania`) REFERENCES `Companias` (`RFC`);
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `comp` FOREIGN KEY (`RFCCompania`) REFERENCES `companias` (`RFC`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
