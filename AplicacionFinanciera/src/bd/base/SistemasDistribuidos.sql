@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-06-2020 a las 03:38:00
+-- Tiempo de generación: 29-06-2020 a las 19:17:51
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.4
 
@@ -39,7 +39,7 @@ CREATE TABLE `companias` (
 --
 
 INSERT INTO `companias` (`RFC`, `TotalAcc`, `AccDisponibles`, `ValorAcc`) VALUES
-('A123456789', 500, 25, 1.50),
+('A123456789', -11, 5, 30.00),
 ('A1B1C1D1E1', 160, 24, 13.90),
 ('ABCDEFGH12', 250, 12, 45.70),
 ('MBYLC4EVER', 10000, 2300, 69.12),
@@ -78,7 +78,19 @@ CREATE TABLE `transacciones` (
 INSERT INTO `transacciones` (`RFCUsuario`, `RFCCompania`, `FechaHora`, `Acciones`, `PrecioAccion`) VALUES
 ('CMMR080397', 'A1B1C1D1E1', '2020-06-25 18:52:38', 90, 56.00),
 ('CMMR080397', 'A1B1C1D1E1', '2020-06-25 18:52:45', 90, 56.50),
-('CMMR080397', 'A123456789', '2020-06-26 01:59:47', 12, 12.00);
+('CMMR080397', 'A123456789', '2020-06-26 01:59:47', 12, 12.00),
+('CMMR080397', 'A123456789', '2020-06-29 11:41:08', -11, 1.20),
+('CMMR080397', 'A123456789', '2020-06-29 11:55:04', -11, 1.20),
+('CMMR080397', 'A123456789', '2020-06-29 12:13:46', -10, 0.80),
+('CMMR080397', 'A123456789', '2020-06-29 12:16:17', 30, 30.00);
+
+--
+-- Disparadores `transacciones`
+--
+DELIMITER $$
+CREATE TRIGGER `nueva_transaccion` AFTER INSERT ON `transacciones` FOR EACH ROW UPDATE companias SET companias.AccDisponibles= companias.AccDisponibles - NEW.acciones, companias.ValorAcc=NEW.PrecioAccion WHERE companias.RFC=NEW.RFCCompania
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 

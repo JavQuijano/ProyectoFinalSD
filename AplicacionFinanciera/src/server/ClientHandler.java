@@ -61,7 +61,7 @@ public class ClientHandler implements Runnable {
                     result = ofertaCompra(infoArray[1], infoArray[2], infoArray[3], infoArray[4]);
                     break;
                 case "4":
-                    result = obtenerComprasUsuario(infoArray[1]);
+                    result = ofertaVenta(infoArray[1], infoArray[2], infoArray[3], infoArray[4]);
                     break;
             }
             out.println(result);
@@ -106,7 +106,7 @@ public class ClientHandler implements Runnable {
     private String obtenerVentasUsuario(String rfcCliente) throws ClassNotFoundException, SQLException {
         DBManager db = new DBManager();
         String result = "";
-        ResultSet rs = db.select("Select SUM(Acciones) as numeroAcciones, RFC, ValorAcc from transacciones JOIN companias ON RFCCompania = RFC WHERE RFCUsuario = '" + rfcCliente + "' AND Acciones > 0 GROUP BY RFCCompania");
+        ResultSet rs = db.select("Select SUM(Acciones) as numeroAcciones, RFC, ValorAcc from transacciones JOIN companias ON RFCCompania = RFC WHERE RFCUsuario = '" + rfcCliente + "' GROUP BY RFCCompania");
         if (rs.next()) {
             do {
                 result += rs.getString("RFC") + "," + String.valueOf(rs.getInt("numeroAcciones")) + "," + String.valueOf(rs.getBigDecimal("ValorAcc") + ";");
@@ -155,10 +155,38 @@ public class ClientHandler implements Runnable {
             timer.addCliente(RFCCliente, Float.parseFloat(valor), Integer.parseInt(cantidad), this);
             timersCompra.add(timer);
         }
-        Thread.sleep(120000);
+        //Thread.sleep(120000);
         provinceServer.terminarTimerCompra(timer);
         
-        return this.Gflag ? "true" : "false";
+        return "true";
+    }
+
+    private String ofertaVenta(String RFCCliente, String RFCCompania, String cantidad, String valor) {
+        TransaccionVenta timer = new TransaccionVenta(provinceServer, RFCCompania, false);
+        boolean flag = false;
+        if (timersCompra.size() > 0) {
+            for (TransaccionVenta timerTemp : timersVenta) {
+                if (timerTemp.RFCCompania.equals(RFCCompania)) {
+                    flag = true;
+                    timer = timerTemp;
+                    timerTemp.addCliente(RFCCliente, Float.parseFloat(valor), Integer.parseInt(cantidad), this);
+                }
+            }
+            if (!flag) {
+                timer = new TransaccionVenta(provinceServer, RFCCompania, true);
+                timer.addCliente(RFCCliente, Float.parseFloat(valor), Integer.parseInt(cantidad), this);
+                timersVenta.add(timer);
+            }
+
+        } else {
+            timer = new TransaccionVenta(provinceServer, RFCCompania, true);
+            timer.addCliente(RFCCliente, Float.parseFloat(valor), Integer.parseInt(cantidad), this);
+            timersVenta.add(timer);
+        }
+        //Thread.sleep(120000);
+        provinceServer.terminarTimerVenta(timer);
+        
+        return "true";
     }
     
 

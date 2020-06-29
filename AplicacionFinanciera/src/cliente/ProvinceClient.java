@@ -1,10 +1,6 @@
 package cliente;
 
 import views.*;
-import cliente.Province;
-import cliente.IRemoteProvince;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
 import java.io.BufferedReader;
@@ -12,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * ProvinceClient: client application
@@ -129,15 +124,28 @@ public class ProvinceClient {
         String result = in.readLine();
         System.out.println(result);
         if(result.equals("true")){
-            System.out.println("comprada");
+            System.out.println("ofertado");
         }else{
-            System.out.println("no comprada");
+            System.out.println("no ofertado");
         }
         socket.close();
     }
 
-    public void ofertarVentaAccion(String RFCCompania, String cantidadVenta, String valorVenta) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void ofertarVentaAccion(String RFCCompania, String cantidadCompra, String valorCompra) throws IOException {
+        socket = new Socket(this.host, this.port);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String parameter = "4:" + this.rfcCliente + ":" + RFCCompania + ":" + cantidadCompra + ":" + valorCompra;
+        System.out.println(parameter);
+        out.println(parameter);
+        String result = in.readLine();
+        System.out.println(result);
+        if(result.equals("true")){
+            System.out.println("ofertado");
+        }else{
+            System.out.println("no ofertado");
+        }
+        socket.close();
     }
 
 }

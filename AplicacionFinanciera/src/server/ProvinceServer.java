@@ -80,4 +80,8 @@ public class ProvinceServer {
     void terminarTimerCompra(TransaccionCompra timer) {
         timersCompra.remove(timer);
     }
+
+    void terminarTimerVenta(TransaccionVenta timer) {
+        timersVenta.remove(timer);
+    }
 }
