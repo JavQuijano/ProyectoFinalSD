@@ -6,17 +6,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-public class VentaAcciones {
-
+public class CompraAcciones {
+    
     private ProvinceClient provinceClient;
     private JFrame frame;
-
-    public VentaAcciones(ProvinceClient provinceClient) {
+    
+    public CompraAcciones(ProvinceClient provinceClient) {
         this.provinceClient = provinceClient;
     }
 
@@ -29,26 +28,26 @@ public class VentaAcciones {
         this.frame = new JFrame("Testing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.add(new VentaAccionesPane(provinceClient));
+        frame.add(new CompraAccionesPane(provinceClient));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
+    
     public void dispose() {
         this.frame.dispose();
     }
 
-    public class VentaAccionesPane extends JPanel {
+    public class CompraAccionesPane extends JPanel {
 
-        public VentaAccionesPane(ProvinceClient provinceClient) throws IOException {
+        public CompraAccionesPane(ProvinceClient provinceClient) throws IOException {
             setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.insets = new Insets(2, 2, 2, 2);
 
-            add(new JLabel("Nombre Accion"), gbc);
+             add(new JLabel("Nombre Accion"), gbc);
             gbc.gridx++;
             
             add(new JLabel("Precio Accion"), gbc);
@@ -60,8 +59,8 @@ public class VentaAcciones {
             gbc.gridx = 0;
             gbc.gridy++;
             
-            ArrayList<String[]> accionesVenta = provinceClient.obtenerAccionesVenta();
-            accionesVenta.forEach(accion -> {
+            ArrayList<String[]> accionesCompra = provinceClient.obtenerAccionesCompra();
+            accionesCompra.forEach(accion -> {
                 agregarAcciones(accion[0], accion[1], accion[2], gbc);
             });
 
@@ -82,6 +81,7 @@ public class VentaAcciones {
 
             gbc.ipady = 0;
             gbc.gridx = 0;
+
             gbc.gridy++;
 
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -98,24 +98,24 @@ public class VentaAcciones {
             gbc.gridy++;
             gbc.fill = GridBagConstraints.NONE;
             gbc.gridwidth = 2;
-            JButton button_VentaAcciones = new JButton("Vender");
-            add(button_VentaAcciones, gbc);
+            JButton button_CompraAcciones = new JButton("Buscar");
+            add(button_CompraAcciones, gbc);
             gbc.gridx++;
             gbc.fill = GridBagConstraints.NONE;
             gbc.gridwidth = 2;
             JButton button_regresar = new JButton("Regresar al panel");
             add(button_regresar, gbc);
 
-            button_VentaAcciones.addActionListener(new ActionListener() {
+            button_CompraAcciones.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                     String RFCCompania = fieldNombre.getText();
-                    String cantidadVenta = fieldCantidad.getText();
-                    String valorVenta = fieldValor.getText();
+                    String cantidadCompra = fieldCantidad.getText();
+                    String valorCompra = fieldValor.getText();
                     try {
-                        provinceClient.ofertarVentaAccion(RFCCompania, cantidadVenta, valorVenta);
+                        provinceClient.ofertarCompraAccion(RFCCompania, cantidadCompra, valorCompra);
                     } catch (IOException ex) {
-                        Logger.getLogger(VentaAcciones.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(CompraAcciones.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
@@ -123,19 +123,20 @@ public class VentaAcciones {
             button_regresar.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    provinceClient.desplegarPanel(1);
+                    provinceClient.desplegarPanel(2);
                 }
             });
 
         }
 
-        public void agregarAcciones(String nombre, String precio, String cantidad, GridBagConstraints gbc) {
+        public void agregarAcciones(String nombre, String valor, String cantidad, GridBagConstraints gbc) {
 
             add(new JLabel(nombre), gbc);
             gbc.gridx++;
-            add(new JLabel(cantidad), gbc);
+            add(new JLabel(valor), gbc);
             gbc.gridx++;
-            add(new JLabel(precio), gbc);
+            add(new JLabel(cantidad), gbc);
+
             gbc.gridx = 0;
             gbc.gridy++;
 

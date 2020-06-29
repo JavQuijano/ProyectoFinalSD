@@ -1,5 +1,0 @@
-VentaAcciones$VentaAccionesPane
-VentaAcciones
-VentaAcciones$VentaAccionesPane$2
-VentaAcciones$1
-VentaAcciones$VentaAccionesPane$1
