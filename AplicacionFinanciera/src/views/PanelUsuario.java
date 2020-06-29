@@ -27,9 +27,7 @@ public class PanelUsuario {
         this.frame = new JFrame("Testing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        PanelUsuarioPane paneluser = new PanelUsuarioPane(this.provinceClient);
-        paneluser.setBackground(Color.black);
-        frame.add(paneluser);
+        frame.add(new PanelUsuarioPane(this.provinceClient));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -49,11 +47,17 @@ public class PanelUsuario {
             position.gridx = 0;
             position.gridy = 0;
             position.insets = new Insets(3, 3, 3, 3);
+            position.weightx = 2;
+            position.ipadx = 0;
+            position.ipady = 50;
+            add(new JLabel("Bienvenido al Panel del usuario"), position);
+
+            position.gridy++;
+            position.gridx = 0;
+            position.ipadx = 0;
+            position.ipady = 0;
 
             JButton button_comprar = new JButton("Comprar");
-            button_comprar.setBackground(Color.green);
-            button_comprar.setOpaque(true);
-            button_comprar.setForeground(Color.white);
             add(button_comprar, position);
             position.gridx++;
 
