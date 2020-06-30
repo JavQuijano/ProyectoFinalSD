@@ -163,7 +163,7 @@ public class ClientHandler implements Runnable {
     private String ofertaVenta(String RFCCliente, String RFCCompania, String cantidad, String valor) {
         TransaccionVenta timer = new TransaccionVenta(provinceServer, RFCCompania, false);
         boolean flag = false;
-        if (timersCompra.size() > 0) {
+        if (timersVenta.size() > 0) {
             for (TransaccionVenta timerTemp : timersVenta) {
                 if (timerTemp.RFCCompania.equals(RFCCompania)) {
                     flag = true;

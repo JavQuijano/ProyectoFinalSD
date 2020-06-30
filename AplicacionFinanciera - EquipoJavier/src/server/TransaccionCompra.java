@@ -85,7 +85,7 @@ public class TransaccionCompra {
             Boolean rs = db.set(
                     "INSERT INTO `Transacciones` VALUES ('" + RFCUsuario + "', '" + RFCCompania + "', '" + fecha + "', " + cantidad + ", " + valor + ")");
             if (rs) {
-                System.out.println("exito");
+                System.out.println("exito-compra");
             } else {
                 System.out.println("fallo");
             }
